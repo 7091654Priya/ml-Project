@@ -1,0 +1,1206 @@
+SQL:
+
+DDL(Data Definition Language) statement:define or modify table structure.
+
+table structure: name of table,name of column, data type of column,constraint
+example: create, drop, alter
+
+DML(Data Manipulation Language): table records
+ example: insert,update,delete
+
+DQL(Data Query language): select
+
+Data Type:
+
+char(n):fixed length
+varchar(n):variable length
+
+int
+
+float(p,s),decimal(p,s),numeric(p,s)
+
+float(p,s) => p =>precision=> total length   s=> scale => no. of decimal places
+
+
+float(10,2) => ________.__
+
+Date:  'YYYY-MM-DD' '2024-09-19'
+
+  'cdac' '2024-09-19'  
+  1234.67  123
+
+
+
+
+
+
+
+
+Creating of table: Create
+
+syntax:  create table TableName(columnName1 dataType(size),columnName2 dataType(size));
+
+Adding records into table: Insert
+
+ Insert into TableName(columnName1,columnName2) values(value1,value2);
+
+ Insert into TableName values(value1,value2);
+
+
+Retrieve records: Select
+
+1. all records of all the columns
+2. all records of selected columns
+3 selected records of all columns: where condition
+4. selected records of selected columns
+
+
+Modify Existing records: Update
+
+syntax:
+       Update TableName set Column1=newValue,Column2=newvalue where condition;
+
+
+Removal of records from table: Delete
+
+ Syntax:  Delete from TableName where Condition;
+
+
+Alter table TableName:
+
+-Add column in table:ADD
+
+ alter table TableName ADD newColumnName datatype(size);
+
+-remove column from table: DROP
+
+alter table tableName drop column columnName;
+
+
+
+-Modify data type/size:MODIFY
+
+alter table TableName Modify columnName newDatatype(newSize);
+
+
+- rename column: Change column
+
+alter table TableName Change Column oldname newname Datatype(size);
+
+-rename tableName: Rename
+ alter table TableName rename to newTableName;
+
+
+remove table from database: Drop table TableName;
+
+
+Data Constraints:
+
+
+constraint Constrant_name Constraint_type
+               
+                
+
+ primary key:is used to uniquely identify a record.
+    value should be unique and it should be not null
+
+  1.At the time of table creation:
+     i. at column level
+     ii. at table level
+
+   department: DeptID int(PK), Dname varchar(50), location varchar(50)
+
+
+
+  2.After table creation
+ 
+ 
+ Foreign key:is used to establish relationship between tables.
+
+  master table(parent table)
+  details table(child table)
+
+  employee: id int(pk), ename varchar(50),salary float(16,2),deptID int(FK)
+
+syntax:
+   create table employee(id int,Ename varchar(50),salary float(16,2),deptid int,
+   primary key(id),
+   Constraint fk_deptid Foreign Key(DeptID) references department(deptid));
+
+
+   -- on delete cascade/set null
+      on update cacade/set null
+
+
+
+
+
+ unique key:
+   create table department(DeptID int,Dname varchar(50),Location varchar(50),Constraint pk_DeptID    unique(DeptID));
+   
+ check constraint:
+
+
+create table employee1(id int,Ename varchar(50) not null,salary float(16,2),deptid int,
+primary key(id),Constraint fk_deptid Foreign Key(DeptID) references department(deptid),
+Constraint chk_salary check(salary>=20000));
+
+
+
+   
+ Check(logical expression)  : it will be enforced in 8.0.16 and later version.
+
+ Not null:only at column level
+
+
+ Operators:
+
+ IN/ NOT IN:
+
+ and OR
+
+ Between..and
+
+ Like: string pattern matching(% and _)
+
+  % used to represent 0,1 or more character
+
+  _(underscore) used to represent exactly a single character
+
+
+
+
+ Conversion Function:
+
+  cast(expression as data_type)
+
+
+  convert(expresssion,data_type)
+
+  Date_format(date_expression,format)
+ 
+  %m => month no.
+  %d => day number
+  %b => month in abbreviated form
+  %M => full month name
+  %W => week day
+
+  STR_to_Date(string,format)
+
+
+
+  Function: single row function and multiple row function(group functions or aggregate function)
+
+  single row function(scaler): number function,string function,date function, conversion function)
+
+  multiple row function(group functions or aggregate function): avg,sum,count(expression),count(*)
+  
+   
+
+ Group By: result based on grouping
+
+ select column,aggregateFunc(column) 
+ from tableName
+ where condition
+ group by  column
+ having condition;
+
+ 
+
+select cust_no,count(ACCT_FD_NO) 
+from acct_fd_cust_dtls
+where ACCT_FD_NO like'SB%' or ACCT_FD_NO like'CA%'
+group by cust_no 
+having count(ACCT_FD_NO)>1;
+
+
+Join:
+
+ cartesian product
+
+  T1- 10 records
+  T2 - 20 records
+  20*10 => 200 
+
+ to avoid the problem of cartesian product, we use join condition with join query
+
+ - to join n tables, there should be (n-1) join condition
+
+
+ select employee.ename,employee.salary,department.dname
+ from employee,department
+ where employee.deptid=department.deptid
+ 
+ ;
+
+ select e.ename,e.salary,d.dname
+ from employee e,department d
+ where e.deptid=d.deptid
+
+  Non-equi join:
+  
+  Select e.ename,e.salary,g.grade
+  from employee e,empgrade g
+  where e.salary Between g.lowest_salary and g.highest_salary;
+
+
+
+==========================================================================
+
+Enter password: *******
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 14
+Server version: 5.7.13-log MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2016, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use testdb;
+Database changed
+mysql> create table department(DeptID int primary key,Dname varchar(50),Location varchar(50));
+Query OK, 0 rows affected (0.19 sec)
+
+mysql> desc department;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| DeptID   | int(11)     | NO   | PRI | NULL    |       |
+| Dname    | varchar(50) | YES  |     | NULL    |       |
+| Location | varchar(50) | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> drop table department;
+Query OK, 0 rows affected (0.24 sec)
+
+mysql> create table department(DeptID int,Dname varchar(50),Location varchar(50),primary key(DeptID));
+Query OK, 0 rows affected (0.21 sec)
+
+mysql> desc department;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| DeptID   | int(11)     | NO   | PRI | NULL    |       |
+| Dname    | varchar(50) | YES  |     | NULL    |       |
+| Location | varchar(50) | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> drop table department;
+Query OK, 0 rows affected (0.10 sec)
+
+mysql> create table department(DeptID int,Dname varchar(50),Location varchar(50),Constraint pk_DeptID primary key(DeptID));
+Query OK, 0 rows affected (0.20 sec)
+
+mysql> desc department;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| DeptID   | int(11)     | NO   | PRI | NULL    |       |
+| Dname    | varchar(50) | YES  |     | NULL    |       |
+| Location | varchar(50) | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> Show create table department;
++------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table      | Create Table                                                                                                                                                                                      |
++------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| department | CREATE TABLE `department` (
+  `DeptID` int(11) NOT NULL,
+  `Dname` varchar(50) DEFAULT NULL,
+  `Location` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`DeptID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 |
++------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> create table employee(id int,Ename varchar(50),salary float(16,2),deptid int,primary key(id),Constraint fk_deptid Foreign Key(DeptID) references department(deptid));
+Query OK, 0 rows affected (0.22 sec)
+
+mysql> desc employee;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| id     | int(11)     | NO   | PRI | NULL    |       |
+| Ename  | varchar(50) | YES  |     | NULL    |       |
+| salary | float(16,2) | YES  |     | NULL    |       |
+| deptid | int(11)     | YES  | MUL | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> insert into department values(10,'Development','Mumbai');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into department values(20,'Research','Bangaluru');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into department values(20,'Sales and Marketing','Delhi');
+ERROR 1062 (23000): Duplicate entry '20' for key 'PRIMARY'
+mysql> insert into department values(30,'Sales and Marketing','Delhi');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> select * from department;
++--------+---------------------+-----------+
+| DeptID | Dname               | Location  |
++--------+---------------------+-----------+
+|     10 | Development         | Mumbai    |
+|     20 | Research            | Bangaluru |
+|     30 | Sales and Marketing | Delhi     |
++--------+---------------------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> insert into employee(1,'Ram',980000,10);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '1,'Ram',980000,10)' at line 1
+mysql> insert into employee values(1,'Ram',980000,10);
+Query OK, 1 row affected (0.04 sec)
+
+mysql> insert into employee values(2,'Rahim',980000,10);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into employee values(3,'Ranbir',980000,40);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`testdb`.`employee`, CONSTRAINT `fk_deptid` FOREIGN KEY (`deptid`) REFERENCES `department` (`DeptID`))
+mysql> insert into employee values(3,'Ranbir',980000,30);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from employee;
++----+--------+-----------+--------+
+| id | Ename  | salary    | deptid |
++----+--------+-----------+--------+
+|  1 | Ram    | 980000.00 |     10 |
+|  2 | Rahim  | 980000.00 |     10 |
+|  3 | Ranbir | 980000.00 |     30 |
++----+--------+-----------+--------+
+3 rows in set (0.00 sec)
+
+mysql> select * from department;
++--------+---------------------+-----------+
+| DeptID | Dname               | Location  |
++--------+---------------------+-----------+
+|     10 | Development         | Mumbai    |
+|     20 | Research            | Bangaluru |
+|     30 | Sales and Marketing | Delhi     |
++--------+---------------------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> delete from department where deptid=10;
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`testdb`.`employee`, CONSTRAINT `fk_deptid` FOREIGN KEY (`deptid`) REFERENCES `department` (`DeptID`))
+mysql> create table employee1(id int,Ename varchar(50),salary float(16,2),deptid int,primary key(id),Constraint fk_deptid Foreign Key(DeptID) references department(deptid),Constraint chk_salary check(salary>=20000));
+ERROR 1022 (23000): Can't write; duplicate key in table 'employee1'
+mysql> alter table Employee add Constraint chk_salary check(salary>=20000);
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> show create table employee;
++----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table    | Create Table                                                                                                                                                                                                                                                                                                                             |
++----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| employee | CREATE TABLE `employee` (
+  `id` int(11) NOT NULL,
+  `Ename` varchar(50) DEFAULT NULL,
+  `salary` float(16,2) DEFAULT NULL,
+  `deptid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_deptid` (`deptid`),
+  CONSTRAINT `fk_deptid` FOREIGN KEY (`deptid`) REFERENCES `department` (`DeptID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 |
++----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> insert into employee values(4,'John',15000,20);
+Query OK, 1 row affected (0.06 sec)
+
+mysql> select 2*2;
++-----+
+| 2*2 |
++-----+
+|   4 |
++-----+
+1 row in set (0.00 sec)
+
+mysql> select 2*2 as "Calculate"
+    -> ;
++-----------+
+| Calculate |
++-----------+
+|         4 |
++-----------+
+1 row in set (0.00 sec)
+
+mysql> select * from employee;
++----+--------+-----------+--------+
+| id | Ename  | salary    | deptid |
++----+--------+-----------+--------+
+|  1 | Ram    | 980000.00 |     10 |
+|  2 | Rahim  | 980000.00 |     10 |
+|  3 | Ranbir | 980000.00 |     30 |
+|  4 | John   |  15000.00 |     20 |
++----+--------+-----------+--------+
+4 rows in set (0.00 sec)
+
+mysql> select Ename from employee where deptid in(10,20);
++-------+
+| Ename |
++-------+
+| Ram   |
+| Rahim |
+| John  |
++-------+
+3 rows in set (0.03 sec)
+
+mysql> select Ename from employee where deptid not in(10,20);
++--------+
+| Ename  |
++--------+
+| Ranbir |
++--------+
+1 row in set (0.00 sec)
+
+mysql> select Ename from employee where deptid =10 or deptid=20;
++-------+
+| Ename |
++-------+
+| Ram   |
+| Rahim |
+| John  |
++-------+
+3 rows in set (0.00 sec)
+
+mysql> select Ename from employee where deptid =10 and deptid=20;
+Empty set (0.00 sec)
+
+mysql> select * from employee;
++----+--------+-----------+--------+
+| id | Ename  | salary    | deptid |
++----+--------+-----------+--------+
+|  1 | Ram    | 980000.00 |     10 |
+|  2 | Rahim  | 980000.00 |     10 |
+|  3 | Ranbir | 980000.00 |     30 |
+|  4 | John   |  15000.00 |     20 |
++----+--------+-----------+--------+
+4 rows in set (0.00 sec)
+
+mysql> select Ename from employee where deptid =10 and salary=980000.00;
++-------+
+| Ename |
++-------+
+| Ram   |
+| Rahim |
++-------+
+2 rows in set (0.00 sec)
+
+mysql> select Ename from employee where salary between 10000 and 50000;
++-------+
+| Ename |
++-------+
+| John  |
++-------+
+1 row in set (0.00 sec)
+
+mysql> select Ename from employee where salary >=10000 and salary<=50000;
++-------+
+| Ename |
++-------+
+| John  |
++-------+
+1 row in set (0.00 sec)
+
+mysql> select * from employee;
++----+--------+-----------+--------+
+| id | Ename  | salary    | deptid |
++----+--------+-----------+--------+
+|  1 | Ram    | 980000.00 |     10 |
+|  2 | Rahim  | 980000.00 |     10 |
+|  3 | Ranbir | 980000.00 |     30 |
+|  4 | John   |  15000.00 |     20 |
++----+--------+-----------+--------+
+4 rows in set (0.00 sec)
+
+mysql> select * from employee where Ename like'R%';
++----+--------+-----------+--------+
+| id | Ename  | salary    | deptid |
++----+--------+-----------+--------+
+|  1 | Ram    | 980000.00 |     10 |
+|  2 | Rahim  | 980000.00 |     10 |
+|  3 | Ranbir | 980000.00 |     30 |
++----+--------+-----------+--------+
+3 rows in set (0.00 sec)
+
+mysql> select * from employee where Ename like'%m';
++----+-------+-----------+--------+
+| id | Ename | salary    | deptid |
++----+-------+-----------+--------+
+|  1 | Ram   | 980000.00 |     10 |
+|  2 | Rahim | 980000.00 |     10 |
++----+-------+-----------+--------+
+2 rows in set (0.00 sec)
+
+mysql> select * from employee where Ename like'%m%';
++----+-------+-----------+--------+
+| id | Ename | salary    | deptid |
++----+-------+-----------+--------+
+|  1 | Ram   | 980000.00 |     10 |
+|  2 | Rahim | 980000.00 |     10 |
++----+-------+-----------+--------+
+2 rows in set (0.00 sec)
+
+mysql> select * from employee where Ename like'_a%';
++----+--------+-----------+--------+
+| id | Ename  | salary    | deptid |
++----+--------+-----------+--------+
+|  1 | Ram    | 980000.00 |     10 |
+|  2 | Rahim  | 980000.00 |     10 |
+|  3 | Ranbir | 980000.00 |     30 |
++----+--------+-----------+--------+
+3 rows in set (0.00 sec)
+
+mysql> select * from employee where Ename like'_a_';
++----+-------+-----------+--------+
+| id | Ename | salary    | deptid |
++----+-------+-----------+--------+
+|  1 | Ram   | 980000.00 |     10 |
++----+-------+-----------+--------+
+1 row in set (0.00 sec)
+
+mysql> select * from employee where Ename like'_a__';
+Empty set (0.00 sec)
+
+mysql> select power(2,3);
++------------+
+| power(2,3) |
++------------+
+|          8 |
++------------+
+1 row in set (0.03 sec)
+
+mysql> select round(2912.564,1);
++-------------------+
+| round(2912.564,1) |
++-------------------+
+|            2912.6 |
++-------------------+
+1 row in set (0.00 sec)
+
+mysql> select round(2912.564);
++-----------------+
+| round(2912.564) |
++-----------------+
+|            2913 |
++-----------------+
+1 row in set (0.00 sec)
+
+mysql> select mod(21,2);
++-----------+
+| mod(21,2) |
++-----------+
+|         1 |
++-----------+
+1 row in set (0.00 sec)
+
+mysql> select Upper("Data Analytics");
++-------------------------+
+| Upper("Data Analytics") |
++-------------------------+
+| DATA ANALYTICS          |
++-------------------------+
+1 row in set (0.00 sec)
+
+mysql> select Lower("Data Analytics");
++-------------------------+
+| Lower("Data Analytics") |
++-------------------------+
+| data analytics          |
++-------------------------+
+1 row in set (0.00 sec)
+
+mysql> select Length("Data Analytics");
++--------------------------+
+| Length("Data Analytics") |
++--------------------------+
+|                       14 |
++--------------------------+
+1 row in set (0.00 sec)
+
+mysql> select substring("Data Analytics",1,4);
++---------------------------------+
+| substring("Data Analytics",1,4) |
++---------------------------------+
+| Data                            |
++---------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select substring("Data Analytics",6,14);
++----------------------------------+
+| substring("Data Analytics",6,14) |
++----------------------------------+
+| Analytics                        |
++----------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select Left("Computer",4);
++--------------------+
+| Left("Computer",4) |
++--------------------+
+| Comp               |
++--------------------+
+1 row in set (0.00 sec)
+
+mysql> select Right("Computer",4);
++---------------------+
+| Right("Computer",4) |
++---------------------+
+| uter                |
++---------------------+
+1 row in set (0.00 sec)
+
+mysql> select INSTR("Data Analytics","Analytics")
+    -> ;
++-------------------------------------+
+| INSTR("Data Analytics","Analytics") |
++-------------------------------------+
+|                                   6 |
++-------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> Select Now();
++---------------------+
+| Now()               |
++---------------------+
+| 2024-09-20 12:45:06 |
++---------------------+
+1 row in set (0.00 sec)
+
+mysql> Select Date(now())
+    -> ;
++-------------+
+| Date(now()) |
++-------------+
+| 2024-09-20  |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select Month(Now());
++--------------+
+| Month(Now()) |
++--------------+
+|            9 |
++--------------+
+1 row in set (0.00 sec)
+
+mysql> select MonthName(Now());
++------------------+
+| MonthName(Now()) |
++------------------+
+| September        |
++------------------+
+1 row in set (0.01 sec)
+
+mysql> select Year("2024-03-23");
++--------------------+
+| Year("2024-03-23") |
++--------------------+
+|               2024 |
++--------------------+
+1 row in set (0.00 sec)
+
+mysql> select cast('1234' as UNSIGNED);
++--------------------------+
+| cast('1234' as UNSIGNED) |
++--------------------------+
+|                     1234 |
++--------------------------+
+1 row in set (0.00 sec)
+
+mysql> select cast('1234.78' as decimal(7,2));
++---------------------------------+
+| cast('1234.78' as decimal(7,2)) |
++---------------------------------+
+|                         1234.78 |
++---------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select convert('1234.78',decimal(7,2));
++---------------------------------+
+| convert('1234.78',decimal(7,2)) |
++---------------------------------+
+|                         1234.78 |
++---------------------------------+
+1 row in set (0.00 sec)
+
+mysql> Select Date_format('2024-09-20','%M %d, %Y');
++---------------------------------------+
+| Date_format('2024-09-20','%M %d, %Y') |
++---------------------------------------+
+| September 20, 2024                    |
++---------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> Select Date_format('2024-09-20','%W, %M %d, %Y');
++-------------------------------------------+
+| Date_format('2024-09-20','%W, %M %d, %Y') |
++-------------------------------------------+
+| Friday, September 20, 2024                |
++-------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select str_to_date('20-09-2024','%d-%m-%Y);
+    '>
+    '> ;
+    '>
+    '> wq
+    '> ^C
+mysql> select str_to_date('20-09-2024','%d-%m-%Y');
++--------------------------------------+
+| str_to_date('20-09-2024','%d-%m-%Y') |
++--------------------------------------+
+| 2024-09-20                           |
++--------------------------------------+
+1 row in set (0.00 sec)
+
+mysql>
+mysql> select * from employee
+    -> ;
++----+--------+-----------+--------+
+| id | Ename  | salary    | deptid |
++----+--------+-----------+--------+
+|  1 | Ram    | 980000.00 |     10 |
+|  2 | Rahim  | 980000.00 |     10 |
+|  3 | Ranbir | 980000.00 |     30 |
+|  4 | John   |  15000.00 |     20 |
++----+--------+-----------+--------+
+4 rows in set (0.00 sec)
+
+mysql> select avg(salary) from employee;
++---------------+
+| avg(salary)   |
++---------------+
+| 738750.000000 |
++---------------+
+1 row in set (0.01 sec)
+
+mysql> select sum(salary) as "Total Salary" from employee;
++--------------+
+| Total Salary |
++--------------+
+|   2955000.00 |
++--------------+
+1 row in set (0.00 sec)
+
+mysql> selct Count(id) from employee;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'selct Count(id) from employee' at line 1
+mysql> select Count(id) from employee;
++-----------+
+| Count(id) |
++-----------+
+|         4 |
++-----------+
+1 row in set (0.00 sec)
+
+mysql> select * from employee;
++----+--------+-----------+--------+
+| id | Ename  | salary    | deptid |
++----+--------+-----------+--------+
+|  1 | Ram    | 980000.00 |     10 |
+|  2 | Rahim  | 980000.00 |     10 |
+|  3 | Ranbir | 980000.00 |     30 |
+|  4 | John   |  15000.00 |     20 |
++----+--------+-----------+--------+
+4 rows in set (0.00 sec)
+
+mysql> select deptid,avg(salary) from employee group by deptid;
++--------+---------------+
+| deptid | avg(salary)   |
++--------+---------------+
+|     10 | 980000.000000 |
+|     20 |  15000.000000 |
+|     30 | 980000.000000 |
++--------+---------------+
+3 rows in set (0.01 sec)
+
+mysql> CREATE TABLE "ACCT_FD_CUST_DTLS"(
+    -> "ACCT_FD_NO" VARCHAR2(10),
+    -> "ACCT_FD_NO" VARCHAR2(10), ^C
+mysql> CREATE TABLE "ACCT_FD_CUST_DTLS"(
+    -> "ACCT_FD_NO" VARCHAR2(10),
+    -> ^CUST_NO" VARCHAR(10));
+mysql> CREATE TABLE "ACCT_FD_CUST_DTLS"(
+    -> "ACCT_FD_NO" VARCHAR(10),
+    -> "CUST_NO" VARCHAR(10));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '"ACCT_FD_CUST_DTLS"(
+"ACCT_FD_NO" VARCHAR(10),
+"CUST_NO" VARCHAR(10))' at line 1
+mysql> CREATE TABLE ACCT_FD_CUST_DTLS(
+    -> ACCT_FD_NO VARCHAR(10),
+    -> CUST_NO VARCHAR(10));
+Query OK, 0 rows affected (0.19 sec)
+
+mysql> desc acct_fd_cust_dtls;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| ACCT_FD_NO | varchar(10) | YES  |     | NULL    |       |
+| CUST_NO    | varchar(10) | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('SB1', 'C1');
+Query OK, 1 row affected (0.04 sec)
+
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('CA2', 'C2');
+Query OK, 1 row affected (0.04 sec)
+
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('CA2', 'C3');
+Query OK, 1 row affected (0.08 sec)
+
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('SB3', 'C4');
+Query OK, 1 row affected (0.04 sec)
+
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('CA4', 'C4');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('CA4', 'C5');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('SB5', 'C1');
+Query OK, 1 row affected (0.05 sec)
+
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('SB5', 'C4');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('SB6', 'C5');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('SB6', 'C7');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('CA7', 'C6');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('CA7', 'C8');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('SB8', 'C9');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('SB9', 'C3');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('SB9', 'C10');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('CA10', 'C10');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('CA10', 'C9');
+Query OK, 1 row affected (0.02 sec)
+
+mysql>
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('SB11', 'C1');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('CA12', 'C2');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('CA12', 'C3');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('SB13', 'C4');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('CA14', 'C4');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('CA14', 'C5');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('SB15', 'C1');
+Query OK, 1 row affected (0.04 sec)
+
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('SB15', 'C4');
+Query OK, 1 row affected (0.03 sec)
+
+mysql>
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('FS1', 'C2');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('FS1', 'C3');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('FS2', 'C4');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('FS2', 'C5');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('FS2', 'C5');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('FS3', 'C6');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('FS3', 'C8');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('FS4', 'C10');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('FS4', 'C9');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> INSERT INTO ACCT_FD_CUST_DTLS (ACCT_FD_NO, CUST_NO) VALUES('FS5', 'C5');
+Query OK, 1 row affected (0.11 sec)
+
+mysql> select * from ACCT_FD_CUST_DTLS;
++------------+---------+
+| ACCT_FD_NO | CUST_NO |
++------------+---------+
+| SB1        | C1      |
+| CA2        | C2      |
+| CA2        | C3      |
+| SB3        | C4      |
+| CA4        | C4      |
+| CA4        | C5      |
+| SB5        | C1      |
+| SB5        | C4      |
+| SB6        | C5      |
+| SB6        | C7      |
+| CA7        | C6      |
+| CA7        | C8      |
+| SB8        | C9      |
+| SB9        | C3      |
+| SB9        | C10     |
+| CA10       | C10     |
+| CA10       | C9      |
+| SB11       | C1      |
+| CA12       | C2      |
+| CA12       | C3      |
+| SB13       | C4      |
+| CA14       | C4      |
+| CA14       | C5      |
+| SB15       | C1      |
+| SB15       | C4      |
+| FS1        | C2      |
+| FS1        | C3      |
+| FS2        | C4      |
+| FS2        | C5      |
+| FS2        | C5      |
+| FS3        | C6      |
+| FS3        | C8      |
+| FS4        | C10     |
+| FS4        | C9      |
+| FS5        | C5      |
++------------+---------+
+35 rows in set (0.00 sec)
+
+mysql> select cust_no,count(ACCT_FD_NO) from acct_fd_cust_dtls group by cust_no;
++---------+-------------------+
+| cust_no | count(ACCT_FD_NO) |
++---------+-------------------+
+| C1      |                 4 |
+| C10     |                 3 |
+| C2      |                 3 |
+| C3      |                 4 |
+| C4      |                 7 |
+| C5      |                 6 |
+| C6      |                 2 |
+| C7      |                 1 |
+| C8      |                 2 |
+| C9      |                 3 |
++---------+-------------------+
+10 rows in set (0.00 sec)
+
+mysql> select cust_no,count(ACCT_FD_NO) from acct_fd_cust_dtls group by cust_no having count(ACCT_FD_NO)>1;
++---------+-------------------+
+| cust_no | count(ACCT_FD_NO) |
++---------+-------------------+
+| C1      |                 4 |
+| C10     |                 3 |
+| C2      |                 3 |
+| C3      |                 4 |
+| C4      |                 7 |
+| C5      |                 6 |
+| C6      |                 2 |
+| C8      |                 2 |
+| C9      |                 3 |
++---------+-------------------+
+9 rows in set (0.00 sec)
+
+mysql> select cust_no,count(ACCT_FD_NO) from acct_fd_cust_dtls group by cust_no having count(ACCT_FD_NO)>1;
++---------+-------------------+
+| cust_no | count(ACCT_FD_NO) |
++---------+-------------------+
+| C1      |                 4 |
+| C10     |                 3 |
+| C2      |                 3 |
+| C3      |                 4 |
+| C4      |                 7 |
+| C5      |                 6 |
+| C6      |                 2 |
+| C8      |                 2 |
+| C9      |                 3 |
++---------+-------------------+
+9 rows in set (0.00 sec)
+
+mysql> select cust_no,count(ACCT_FD_NO)
+    -> from acct_fd_cust_dtls
+    -> where ACCT_FD_NO like'SB%' or ACCT_FD_NO like'CA%'
+    -> group by cust_no
+    -> having count(ACCT_FD_NO)>1;
++---------+-------------------+
+| cust_no | count(ACCT_FD_NO) |
++---------+-------------------+
+| C1      |                 4 |
+| C10     |                 2 |
+| C2      |                 2 |
+| C3      |                 3 |
+| C4      |                 6 |
+| C5      |                 3 |
+| C9      |                 2 |
++---------+-------------------+
+7 rows in set (0.00 sec)
+
+mysql> select * from employee;
++----+--------+-----------+--------+
+| id | Ename  | salary    | deptid |
++----+--------+-----------+--------+
+|  1 | Ram    | 980000.00 |     10 |
+|  2 | Rahim  | 980000.00 |     10 |
+|  3 | Ranbir | 980000.00 |     30 |
+|  4 | John   |  15000.00 |     20 |
++----+--------+-----------+--------+
+4 rows in set (0.00 sec)
+
+mysql> select * from department;
++--------+---------------------+-----------+
+| DeptID | Dname               | Location  |
++--------+---------------------+-----------+
+|     10 | Development         | Mumbai    |
+|     20 | Research            | Bangaluru |
+|     30 | Sales and Marketing | Delhi     |
++--------+---------------------+-----------+
+3 rows in set (0.00 sec)
+
+mysql>  select employee.ename,employee.salary,department.dname
+    ->  from employee,department
+    ->  where employee.deptid=department.deptid;
++--------+-----------+---------------------+
+| ename  | salary    | dname               |
++--------+-----------+---------------------+
+| Ram    | 980000.00 | Development         |
+| Rahim  | 980000.00 | Development         |
+| Ranbir | 980000.00 | Sales and Marketing |
+| John   |  15000.00 | Research            |
++--------+-----------+---------------------+
+4 rows in set (0.00 sec)
+
+mysql>  select e.ename,e.salary,d.dname
+    ->  from employee e,department d
+    ->  where e.deptid=d.deptid;
++--------+-----------+---------------------+
+| ename  | salary    | dname               |
++--------+-----------+---------------------+
+| Ram    | 980000.00 | Development         |
+| Rahim  | 980000.00 | Development         |
+| Ranbir | 980000.00 | Sales and Marketing |
+| John   |  15000.00 | Research            |
++--------+-----------+---------------------+
+4 rows in set (0.00 sec)
+
+mysql> create table empGrade(grade varchar(2) primary key,lowest_salary float(16,2),highest_salary float(16,2));
+Query OK, 0 rows affected (0.20 sec)
+
+mysql> insert into empgrade values('A',100000,1000000);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into empgrade values('B',10000,100000);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into empgrade values('C',1000,10000);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> select * from empgrade;
++-------+---------------+----------------+
+| grade | lowest_salary | highest_salary |
++-------+---------------+----------------+
+| A     |     100000.00 |     1000000.00 |
+| B     |      10000.00 |      100000.00 |
+| C     |       1000.00 |       10000.00 |
++-------+---------------+----------------+
+3 rows in set (0.00 sec)
+
+mysql> select * from employee;
++----+--------+-----------+--------+
+| id | Ename  | salary    | deptid |
++----+--------+-----------+--------+
+|  1 | Ram    | 980000.00 |     10 |
+|  2 | Rahim  | 980000.00 |     10 |
+|  3 | Ranbir | 980000.00 |     30 |
+|  4 | John   |  15000.00 |     20 |
++----+--------+-----------+--------+
+4 rows in set (0.00 sec)
+
+mysql> Select e.ename,e.salary,g.grade
+    ->   from employee e,empgrade g
+    ->   where e.salary Between g.lowest_salary and g.highest_salary;
++--------+-----------+-------+
+| ename  | salary    | grade |
++--------+-----------+-------+
+| Ram    | 980000.00 | A     |
+| Rahim  | 980000.00 | A     |
+| Ranbir | 980000.00 | A     |
+| John   |  15000.00 | B     |
++--------+-----------+-------+
+4 rows in set (0.00 sec)
+
+===============================================================
+
+Working with Database by using python programming:
+
+Steps:
+
+ - import required python library(module and packages) of underlying    database
+
+ - Establish the connection with database
+
+ -open the connection before executing the command(sql query)
+
+ - Display the information retreived from the database as per your requirement.
+
+ - close the connection once the task is completed.
+ 
+
+
+
+Step1 - import required python library(module and packages) of underlying    database
+
+ pip command utility:
+
+ pip install mysql-connector-python
+
+ C:\Users\CDAC>pip install mysql-connector-python
+Collecting mysql-connector-python
+  Downloading mysql_connector_python-9.0.0-cp312-cp312-win_amd64.whl.metadata (2.0 kB)
+Downloading mysql_connector_python-9.0.0-cp312-cp312-win_amd64.whl (14.3 MB)
+   ---------------------------------------- 14.3/14.3 MB 8.2 MB/s eta 0:00:00
+Installing collected packages: mysql-connector-python
+Successfully installed mysql-connector-python-9.0.0
+
+
+ Step2- Establish the connection with database
+
+  host:localhost
+  database
+  user
+  password
+  port
+
+
+
+
+
+
